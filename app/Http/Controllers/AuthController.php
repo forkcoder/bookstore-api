@@ -31,8 +31,8 @@ class AuthController extends Controller
         ]);
 
         $user->save();
-
-        return response()->json(['message' => 'User registered successfully'], 201);
+        $token = $user->createToken('Personal Access Token')->accessToken;
+        return response()->json(['token' => $token, 'user'=> $user], 201);
     }
 
     
@@ -43,7 +43,7 @@ class AuthController extends Controller
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
             $token = $user->createToken('Personal Access Token')->accessToken;
-            return response()->json(['token' => $token], 200);
+            return response()->json(['token' => $token, 'user'=> $user], 200);
         }
         return response()->json(['message' => 'Unauthorized'], 401);
     }
